@@ -46,17 +46,6 @@ variable "server_name" {
   type        = string
 }
 
-variable "admin_username" {
-  description = "The administrator username of the SQL server"
-  type        = string
-}
-
-variable "admin_password" {
-  description = "The administrator password of the SQL server"
-  type        = string
-  sensitive   = true
-}
-
 variable "db_name" {
   description = "The name of the SQL database"
   type        = string

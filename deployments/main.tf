@@ -43,8 +43,6 @@ module "app_service" {
 module "database" {
   source         = "../modules/database"
   server_name    = var.server_name
-  admin_username = var.admin_username
-  admin_password = var.admin_password
   db_name        = var.db_name
   collation      = var.collation
   license_type   = var.license_type

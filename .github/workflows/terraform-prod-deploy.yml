@@ -1,0 +1,36 @@
+name: Production Terraform Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-prod:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ secrets.PROD_URL }}
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      WORKING_DIR: ./deployments
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Terraform Init
+        run: terraform init -backend-config="backend-config-prod.tfvars"
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: Terraform Plan
+        run: terraform plan -var-file="terraform.prod.tfvars"
+        working-directory: ${{ env.WORKING_DIR }}
+      
+      - name: Manual Approval Needed for Production
+        run: echo "Please review the Terraform plan and manually approve the deployment"
+        if: false
+
+      - name: Terraform Apply (Manual)
+        run: terraform apply -auto-approve -var-file="terraform.prod.tfvars"
+        working-directory: ${{ env.WORKING_DIR }}

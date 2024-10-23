@@ -3,17 +3,6 @@ variable "server_name" {
     type        = string
 }
 
-variable "admin_username" {
-    description = "The administrator username of the SQL server"
-    type        = string
-}
-
-variable "admin_password" {
-    description = "The administrator password of the SQL server"
-    type        = string
-    sensitive = true
-}
-
 variable "rg_name" {
     description = "The name of the resource group"
     type        = string

@@ -1,17 +1,15 @@
-name: Deploy Infrastructure
+name: Terraform Plan & Apply
 
 on:
-  pull_request:
+  push:
     branches:
       - 'dev'
       - 'staging'
-      - 'prod'
+  workflow_dispatch:
 
 jobs:
-  terraform:
-    name: 'Deploy Infrastructure'
+  deploy:
     runs-on: ubuntu-latest
-
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -20,20 +18,17 @@ jobs:
       WORKING_DIR: ./deployments
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - name: Terraform init
-        id: init
-        run: terraform init
+        run: terraform init -backend-config="backend-config.tfvars"
         working-directory: ${{ env.WORKING_DIR }}
 
-      - name: Terraform plan
-        id: plan
-        run: terraform plan
+      - name: Terraform Plan
+        run: terraform plan -var-file="terraform.${{ github.ref_name }}.tfvars"
         working-directory: ${{ env.WORKING_DIR }}
 
-
-      - name: Terraform apply
-        id: apply
-        run: terraform apply -auto-approve
+      - name: Conditional Terraform Apply
+        if: github.ref_name == 'dev' || github.ref_name == 'staging'
+        run: terraform apply -auto-approve -var-file="terraform.${{ github.ref_name }}.tfvars"
         working-directory: ${{ env.WORKING_DIR }}
