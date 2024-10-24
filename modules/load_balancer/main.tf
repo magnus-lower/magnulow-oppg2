@@ -1,5 +1,11 @@
+resource "random_string" "random_string" {
+  length  = 6
+  special = false 
+  upper = false
+}
+
 resource "azurerm_public_ip" "public_ip" {
-  name                = var.public_ip_name
+  name                = "${var.public_ip_name}-${random_string.random_string.result}"
   location            = var.location
   resource_group_name = var.rg_name
   allocation_method   = var.allocation_method
@@ -8,7 +14,7 @@ resource "azurerm_public_ip" "public_ip" {
 }
 
 resource "azurerm_lb" "load_balancer" {
-  name                = var.lb_name
+  name                = "${var.lb_name}-${random_string.random_string.result}"
   location            = var.location
   resource_group_name = var.rg_name
 

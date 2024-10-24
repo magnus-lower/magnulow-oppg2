@@ -8,12 +8,12 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "global" {
-  name = "rg-global-resources"
-  location = "westeurope"
+  name = var.rg_name
+  location = var.location
 }
 
 resource "azurerm_storage_account" "tfstate" {
-  name = "OperaTerrasa564"
+  name = var.sa_name
   resource_group_name = azurerm_resource_group.global.name
   location = azurerm_resource_group.global.location
   account_tier = "Standard"
@@ -26,18 +26,7 @@ resource "azurerm_storage_account" "tfstate" {
 }
 
 resource "azurerm_storage_container" "tfstate_container" {
-  name = "tfstate-files"
+  name = var.sc_name
   storage_account_name = azurerm_storage_account.tfstate.name
   container_access_type = "private"
-}
-
-output "storage_account_connection_string" {
-  description = "Connection string for the storage account"
-  value = azurerm_storage_account.tfstate.primary_connection_string
-  sensitive = true
-}
-
-output "storage_account_id" {
-  description = "ID of the storage account"
-  value = azurerm_storage_account.tfstate.id
 }

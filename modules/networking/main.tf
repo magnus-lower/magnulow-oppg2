@@ -1,11 +1,17 @@
+resource "random_string" "random_string" {
+  length  = 6
+  special = false 
+  upper = false
+}
+
 resource "azurerm_network_security_group" "nsg" {
-  name                = var.nsg_name
+  name                = "${var.nsg_name}-${random_string.random_string.result}"
   location            = var.location
   resource_group_name = var.rg_name
 }
 
 resource "azurerm_virtual_network" "vnet" {
-  name                = var.vnet_name
+  name                = "${var.vnet_name}-${random_string.random_string.result}"
   location            = var.location
   resource_group_name = var.rg_name
   address_space       = var.vnet_address_space
@@ -16,7 +22,7 @@ resource "azurerm_virtual_network" "vnet" {
 }
 
 resource "azurerm_subnet" "subnet" {
-  name                 = var.subnet_name
+  name                 = "${var.subnet_name}-${random_string.random_string.result}"
   resource_group_name  = var.rg_name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = var.subnet_address_prefixes
