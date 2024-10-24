@@ -5,13 +5,7 @@ terraform {
       version = "4.6.0"
     }
   }
-
-  backend "azurerm" {
-    resource_group_name  = "rg-backend-tfstate"
-    storage_account_name = "sabetfs59c04d076a"
-    container_name       = "tfstate"
-    key                  = "magnulow_oppg2.terraform.tfstate"
-  }
+  backend "azurerm" {}
 }
 
 provider "azurerm" {
